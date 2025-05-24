@@ -1,0 +1,7 @@
+# ninja log v6
+6	113	7698290826772914	CMakeFiles/Estrutura_de_Dados.dir/main.cpp.obj	df2ef09c53663e82
+113	308	7698290827849381	Estrutura_de_Dados.exe	fbf4d6026aff1681
+24	984	7698293503348800	CMakeFiles/Estrutura_de_Dados.dir/LinkedList.cpp.obj	dfd20891129ceb14
+4	997	7698293503159641	CMakeFiles/Estrutura_de_Dados.dir/main.cpp.obj	df2ef09c53663e82
+16	1200	7698293503268379	CMakeFiles/Estrutura_de_Dados.dir/DataHandler.cpp.obj	aaa602ae62cc8654
+1200	1454	7698293515107972	Estrutura_de_Dados.exe	8ab63efe0a4a1974
