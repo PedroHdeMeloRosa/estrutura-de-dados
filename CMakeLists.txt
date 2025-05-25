@@ -7,4 +7,4 @@ add_executable(Estrutura_de_Dados main.cpp
         DataHandler.h
         DataHandler.cpp
         LinkedList.h
-        LinkedList.cpp)
+)

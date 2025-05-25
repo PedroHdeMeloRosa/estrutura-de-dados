@@ -61,12 +61,6 @@ build CMakeFiles/Estrutura_de_Dados.dir/DataHandler.cpp.obj: CXX_COMPILER__Estru
   OBJECT_DIR = CMakeFiles\Estrutura_de_Dados.dir
   OBJECT_FILE_DIR = CMakeFiles\Estrutura_de_Dados.dir
 
-build CMakeFiles/Estrutura_de_Dados.dir/LinkedList.cpp.obj: CXX_COMPILER__Estrutura_de_Dados_unscanned_Debug C$:/Users/Pedro/Desktop/Estrutura$ de$ Dados/LinkedList.cpp || cmake_object_order_depends_target_Estrutura_de_Dados
-  DEP_FILE = CMakeFiles\Estrutura_de_Dados.dir\LinkedList.cpp.obj.d
-  FLAGS = -g -std=gnu++20 -fdiagnostics-color=always
-  OBJECT_DIR = CMakeFiles\Estrutura_de_Dados.dir
-  OBJECT_FILE_DIR = CMakeFiles\Estrutura_de_Dados.dir
-
 
 # =============================================================================
 # Link build statements for EXECUTABLE target Estrutura_de_Dados
@@ -75,7 +69,7 @@ build CMakeFiles/Estrutura_de_Dados.dir/LinkedList.cpp.obj: CXX_COMPILER__Estrut
 #############################################
 # Link the executable Estrutura_de_Dados.exe
 
-build Estrutura_de_Dados.exe: CXX_EXECUTABLE_LINKER__Estrutura_de_Dados_Debug CMakeFiles/Estrutura_de_Dados.dir/main.cpp.obj CMakeFiles/Estrutura_de_Dados.dir/DataHandler.cpp.obj CMakeFiles/Estrutura_de_Dados.dir/LinkedList.cpp.obj
+build Estrutura_de_Dados.exe: CXX_EXECUTABLE_LINKER__Estrutura_de_Dados_Debug CMakeFiles/Estrutura_de_Dados.dir/main.cpp.obj CMakeFiles/Estrutura_de_Dados.dir/DataHandler.cpp.obj
   FLAGS = -g
   LINK_LIBRARIES = -lkernel32 -luser32 -lgdi32 -lwinspool -lshell32 -lole32 -loleaut32 -luuid -lcomdlg32 -ladvapi32
   OBJECT_DIR = CMakeFiles\Estrutura_de_Dados.dir
