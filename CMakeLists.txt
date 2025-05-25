@@ -9,5 +9,5 @@ add_executable(Estrutura_de_Dados main.cpp
         LinkedList.h
         AVLTree.h
         HashTable.h
-        CuckooHashTable.h
+        BloomFilter.h
 )

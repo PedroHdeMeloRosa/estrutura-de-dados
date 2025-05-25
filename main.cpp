@@ -4,7 +4,7 @@
 #include "LinkedList.h"
 #include "AVLTree.h"
 #include "HashTable.h"
-#include "CuckooHashTable.h"
+#include "BloomFilter.h"  // Novo include
 
 template <typename T>
 void menuEstrutura(T& estrutura, const std::string& nomeEstrutura) {
@@ -13,7 +13,7 @@ void menuEstrutura(T& estrutura, const std::string& nomeEstrutura) {
         std::cout << "\n=== MENU " << nomeEstrutura << " ===\n"
                   << "1. Inserir Moto\n"
                   << "2. Remover Moto\n"
-                  << "3. Buscar Moto Exata\n"
+                  << "3. Buscar Moto\n"
                   << "4. Exibir Todas\n"
                   << "0. Voltar\n"
                   << "Escolha: ";
@@ -26,7 +26,7 @@ void menuEstrutura(T& estrutura, const std::string& nomeEstrutura) {
             std::getline(std::cin, moto.marca);
             std::cout << "Modelo: ";
             std::getline(std::cin, moto.nome);
-            std::cout << "Preço: ";
+            std::cout << "Preco: ";
             std::cin >> moto.preco;
             std::cout << "Revenda: ";
             std::cin >> moto.revenda;
@@ -36,21 +36,25 @@ void menuEstrutura(T& estrutura, const std::string& nomeEstrutura) {
             std::cin.ignore();
 
         } else if (escolha == 2) {
-            Moto moto;
-            std::cout << "Marca: ";
-            std::getline(std::cin, moto.marca);
-            std::cout << "Modelo: ";
-            std::getline(std::cin, moto.nome);
-            std::cout << "Preço: ";
-            std::cin >> moto.preco;
-            std::cout << "Revenda: ";
-            std::cin >> moto.revenda;
-            std::cout << "Ano: ";
-            std::cin >> moto.ano;
-            if constexpr (std::is_same_v<T, LinkedList<Moto>>) {
-                estrutura.remover(moto);
+            if constexpr (!std::is_same_v<T, BloomFilter<Moto>>) {
+                Moto moto;
+                std::cout << "Marca: ";
+                std::getline(std::cin, moto.marca);
+                std::cout << "Modelo: ";
+                std::getline(std::cin, moto.nome);
+                std::cout << "Preço: ";
+                std::cin >> moto.preco;
+                std::cout << "Revenda: ";
+                std::cin >> moto.revenda;
+                std::cout << "Ano: ";
+                std::cin >> moto.ano;
+                if constexpr (std::is_same_v<T, LinkedList<Moto>>) {
+                    estrutura.remover(moto);
+                } else {
+                    std::cout << "Remocao nao suportada nesta estrutura!\n";
+                }
             } else {
-                std::cout << "Remoção não suportada nesta estrutura!\n";
+                std::cout << "\nBloom Filter nao suporta remocao!\n";
             }
             std::cin.ignore();
 
@@ -67,15 +71,24 @@ void menuEstrutura(T& estrutura, const std::string& nomeEstrutura) {
             std::cout << "Ano: ";
             std::cin >> moto.ano;
 
-            int passos = 0;
-            bool encontrado = estrutura.buscar(moto, passos);
-
-            std::cout << (encontrado ? "Encontrado" : "Não encontrado")
-                      << " | Passos: " << passos << "\n";
+            bool encontrado;
+            if constexpr (std::is_same_v<T, BloomFilter<Moto>>) {
+                encontrado = estrutura.buscar(moto);
+                std::cout << (encontrado ? "Possivelmente presente" : "Definitivamente ausente") << "\n";
+            } else {
+                int passos = 0;
+                encontrado = estrutura.buscar(moto, passos);
+                std::cout << (encontrado ? "Encontrado" : "Não encontrado")
+                          << " | Passos: " << passos << "\n";
+            }
             std::cin.ignore();
 
         } else if (escolha == 4) {
-            estrutura.exibir();
+            if constexpr (std::is_same_v<T, BloomFilter<Moto>>) {
+                estrutura.exibir();
+            } else {
+                estrutura.exibir();
+            }
         }
     } while (escolha != 0);
 }
@@ -85,14 +98,14 @@ int main() {
         LinkedList<Moto> lista;
         AVLTree<Moto> arvore;
         HashTable<Moto> tabelaHash;
-        CuckooHashTable<Moto> cuckooHash;
+        BloomFilter<Moto> bloomFilter;  // Substitui o Cuckoo Hashing
         auto motos = DataHandler::lerDataset("../data/bike_sales_india.csv");
 
         for (const auto& moto : motos) {
             lista.inserir(moto);
             arvore.inserir(moto);
             tabelaHash.inserir(moto);
-            cuckooHash.inserir(moto);
+            bloomFilter.inserir(moto);  // Carrega no Bloom Filter
         }
 
         int escolha;
@@ -101,16 +114,16 @@ int main() {
                       << "1. Lista Encadeada\n"
                       << "2. Arvore AVL\n"
                       << "3. Tabela Hash\n"
-                      << "4. Cuckoo Hashing\n"
+                      << "4. Bloom Filter\n"  // Nova opção
                       << "0. Sair\n"
                       << "Escolha: ";
             std::cin >> escolha;
             std::cin.ignore();
 
             if (escolha == 1) menuEstrutura(lista, "LISTA ENCADEADA");
-            else if (escolha == 2) menuEstrutura(arvore, "ÁRVORE AVL");
+            else if (escolha == 2) menuEstrutura(arvore, "ARVORE AVL");
             else if (escolha == 3) menuEstrutura(tabelaHash, "TABELA HASH");
-            else if (escolha == 4) menuEstrutura(cuckooHash, "CUCKOO HASHING");
+            else if (escolha == 4) menuEstrutura(bloomFilter, "BLOOM FILTER");
 
         } while (escolha != 0);
 
