@@ -19,7 +19,7 @@ private:
 
     Node* root;
 
-    // Funções de balanceamento
+    // Funções auxiliares
     int height(Node* node) { return node ? node->height : 0; }
     int balanceFactor(Node* node) { return height(node->right) - height(node->left); }
 
@@ -57,11 +57,50 @@ private:
         return node;
     }
 
+    // Função para encontrar o nó mínimo
+    Node* findMin(Node* node) {
+        return node->left ? findMin(node->left) : node;
+    }
+
     // Inserção
     Node* insertRec(Node* node, T data) {
         if (!node) return new Node(data);
         if (data.nome < node->data.nome) node->left = insertRec(node->left, data);
         else node->right = insertRec(node->right, data);
+        updateHeight(node);
+        return balance(node);
+    }
+
+    // Remoção
+    Node* removeRec(Node* node, T data) {
+        if (!node) return nullptr;
+
+        // Busca pelo nó
+        if (data.nome < node->data.nome) {
+            node->left = removeRec(node->left, data);
+        } else if (data.nome > node->data.nome) {
+            node->right = removeRec(node->right, data);
+        } else {
+            // Nó encontrado: deletar
+            if (!node->left || !node->right) {
+                Node* temp = node->left ? node->left : node->right;
+                if (!temp) {
+                    temp = node;
+                    node = nullptr;
+                } else {
+                    *node = *temp; // Copia conteúdo
+                }
+                delete temp;
+            } else {
+                // Nó com dois filhos: substituir pelo sucessor in-order
+                Node* temp = findMin(node->right);
+                node->data = temp->data;
+                node->right = removeRec(node->right, temp->data);
+            }
+        }
+
+        // Balancear após remoção
+        if (!node) return node;
         updateHeight(node);
         return balance(node);
     }
@@ -99,6 +138,8 @@ public:
 
     void inserir(T data) { root = insertRec(root, data); }
 
+    void remover(T data) { root = removeRec(root, data); }
+
     bool buscar(T data, int& passos) {
         passos = 0;
         return searchRec(root, data, passos);
@@ -113,6 +154,10 @@ public:
                   << std::setw(6) << "Ano\n";
         printInOrder(root);
         std::cout << std::string(70, '-') << "\n";
+    }
+
+    ~AVLTree() {
+        // Destrutor opcional (implementar se necessário)
     }
 };
 

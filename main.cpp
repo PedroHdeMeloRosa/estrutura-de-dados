@@ -3,6 +3,8 @@
 #include "DataHandler.h"
 #include "LinkedList.h"
 #include "AVLTree.h"
+#include "HashTable.h"
+#include "CuckooHashTable.h"
 
 template <typename T>
 void menuEstrutura(T& estrutura, const std::string& nomeEstrutura) {
@@ -68,7 +70,7 @@ void menuEstrutura(T& estrutura, const std::string& nomeEstrutura) {
             int passos = 0;
             bool encontrado = estrutura.buscar(moto, passos);
 
-            std::cout << (encontrado ? "✅ Encontrado" : "❌ Não encontrado")
+            std::cout << (encontrado ? "Encontrado" : "Não encontrado")
                       << " | Passos: " << passos << "\n";
             std::cin.ignore();
 
@@ -82,18 +84,24 @@ int main() {
     try {
         LinkedList<Moto> lista;
         AVLTree<Moto> arvore;
+        HashTable<Moto> tabelaHash;
+        CuckooHashTable<Moto> cuckooHash;
         auto motos = DataHandler::lerDataset("../data/bike_sales_india.csv");
 
         for (const auto& moto : motos) {
             lista.inserir(moto);
             arvore.inserir(moto);
+            tabelaHash.inserir(moto);
+            cuckooHash.inserir(moto);
         }
 
         int escolha;
         do {
             std::cout << "\n=== MENU PRINCIPAL ===\n"
                       << "1. Lista Encadeada\n"
-                      << "2. Árvore AVL\n"
+                      << "2. Arvore AVL\n"
+                      << "3. Tabela Hash\n"
+                      << "4. Cuckoo Hashing\n"
                       << "0. Sair\n"
                       << "Escolha: ";
             std::cin >> escolha;
@@ -101,6 +109,8 @@ int main() {
 
             if (escolha == 1) menuEstrutura(lista, "LISTA ENCADEADA");
             else if (escolha == 2) menuEstrutura(arvore, "ÁRVORE AVL");
+            else if (escolha == 3) menuEstrutura(tabelaHash, "TABELA HASH");
+            else if (escolha == 4) menuEstrutura(cuckooHash, "CUCKOO HASHING");
 
         } while (escolha != 0);
 

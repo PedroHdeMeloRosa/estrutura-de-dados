@@ -8,4 +8,6 @@ add_executable(Estrutura_de_Dados main.cpp
         DataHandler.cpp
         LinkedList.h
         AVLTree.h
+        HashTable.h
+        CuckooHashTable.h
 )

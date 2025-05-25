@@ -4,8 +4,6 @@
 #include <iostream>
 #include <iomanip>
 #include <string>
-#include <sstream>
-#include "DataHandler.h"
 
 template <typename T>
 class LinkedList {
@@ -17,22 +15,20 @@ private:
     };
     Node* head;
 
-    // Busca recursiva por todos os campos
-    int buscarExatoRecursivo(Node* atual, const T& alvo, int posicao) {
-        if (!atual) return -1; // Fim da lista
+    // Busca recursiva com contagem de passos
+    bool buscarRecursivo(Node* atual, const T& alvo, int& passos) {
+        if (!atual) return false;
+        passos++; // Conta cada passo
 
-        // Verifica todos os campos
         if (
             atual->data.marca == alvo.marca &&
             atual->data.nome == alvo.nome &&
             atual->data.preco == alvo.preco &&
             atual->data.revenda == alvo.revenda &&
             atual->data.ano == alvo.ano
-        ) {
-            return posicao;
-        }
+        ) return true;
 
-        return buscarExatoRecursivo(atual->next, alvo, posicao + 1);
+        return buscarRecursivo(atual->next, alvo, passos);
     }
 
 public:
@@ -47,28 +43,28 @@ public:
     void remover(T data) {
         Node* atual = head;
         Node* anterior = nullptr;
-
         while (atual) {
-            if (atual->data.marca == data.marca &&
+            if (
+                atual->data.marca == data.marca &&
                 atual->data.nome == data.nome &&
                 atual->data.preco == data.preco &&
                 atual->data.revenda == data.revenda &&
-                atual->data.ano == data.ano) {
-
+                atual->data.ano == data.ano
+            ) {
                 if (anterior) anterior->next = atual->next;
                 else head = atual->next;
-
                 delete atual;
                 return;
-                }
+            }
             anterior = atual;
             atual = atual->next;
         }
     }
 
-    // Busca por todos os campos
-    int buscar(const T& alvo) {
-        return buscarExatoRecursivo(head, alvo, 1); // Posições começam em 1
+    // Busca com contagem de passos
+    bool buscar(T data, int& passos) {
+        passos = 0;
+        return buscarRecursivo(head, data, passos);
     }
 
     void exibir() {
