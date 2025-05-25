@@ -4,6 +4,8 @@
 #include <iostream>
 #include <iomanip>
 #include <string>
+#include <sstream>
+#include "DataHandler.h"
 
 template <typename T>
 class LinkedList {
@@ -42,8 +44,30 @@ public:
         head = novoNode;
     }
 
+    void remover(T data) {
+        Node* atual = head;
+        Node* anterior = nullptr;
+
+        while (atual) {
+            if (atual->data.marca == data.marca &&
+                atual->data.nome == data.nome &&
+                atual->data.preco == data.preco &&
+                atual->data.revenda == data.revenda &&
+                atual->data.ano == data.ano) {
+
+                if (anterior) anterior->next = atual->next;
+                else head = atual->next;
+
+                delete atual;
+                return;
+                }
+            anterior = atual;
+            atual = atual->next;
+        }
+    }
+
     // Busca por todos os campos
-    int buscarExato(const T& alvo) {
+    int buscar(const T& alvo) {
         return buscarExatoRecursivo(head, alvo, 1); // Posições começam em 1
     }
 

@@ -1,14 +1,8 @@
 # ninja log v6
-36	1030	7698341340862979	CMakeFiles/Estrutura_de_Dados.dir/main.cpp.obj	df2ef09c53663e82
-805	1000	7698335577032646	Estrutura_de_Dados.exe	8ab63efe0a4a1974
-4	461	7698343107696261	build.ninja	4a85ea6dfe38c328
-44	908	7698341340940999	CMakeFiles/Estrutura_de_Dados.dir/LinkedList.cpp.obj	dfd20891129ceb14
-50	1188	7698334747394049	CMakeFiles/Estrutura_de_Dados.dir/DataHandler.cpp.obj	aaa602ae62cc8654
-2	443	7698343107696261	build.ninja	4a85ea6dfe38c328
-62	820	7698343109344021	CMakeFiles/Estrutura_de_Dados.dir/main.cpp.obj	df2ef09c53663e82
-820	993	7698343116921043	Estrutura_de_Dados.exe	4ae15ab5b4ac3d41
-56	1284	7698348303647208	CMakeFiles/Estrutura_de_Dados.dir/DataHandler.cpp.obj	aaa602ae62cc8654
-45	1325	7698348303536816	CMakeFiles/Estrutura_de_Dados.dir/main.cpp.obj	df2ef09c53663e82
-1325	1519	7698348316344632	Estrutura_de_Dados.exe	4ae15ab5b4ac3d41
 39	945	7698354434850710	CMakeFiles/Estrutura_de_Dados.dir/main.cpp.obj	df2ef09c53663e82
 945	1134	7698354443898248	Estrutura_de_Dados.exe	4ae15ab5b4ac3d41
+2	443	7699011003554845	build.ninja	4a85ea6dfe38c328
+44	908	7698341340940999	CMakeFiles/Estrutura_de_Dados.dir/LinkedList.cpp.obj	dfd20891129ceb14
+56	1284	7698348303647208	CMakeFiles/Estrutura_de_Dados.dir/DataHandler.cpp.obj	aaa602ae62cc8654
+4	791	7699018978859825	CMakeFiles/Estrutura_de_Dados.dir/main.cpp.obj	df2ef09c53663e82
+792	1195	7699018986743352	Estrutura_de_Dados.exe	4ae15ab5b4ac3d41
