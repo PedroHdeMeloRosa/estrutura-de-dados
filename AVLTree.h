@@ -4,6 +4,7 @@
 #include <iostream>
 #include <iomanip>
 #include <algorithm>
+#include <tuple>
 #include "DataHandler.h"
 
 template <typename T>
@@ -19,7 +20,10 @@ private:
 
     Node* root;
 
-    // Funções auxiliares
+    Node* findMin(Node* node) {
+        return node->left ? findMin(node->left) : node;
+    }
+
     int height(Node* node) { return node ? node->height : 0; }
     int balanceFactor(Node* node) { return height(node->right) - height(node->left); }
 
@@ -57,70 +61,52 @@ private:
         return node;
     }
 
-    // Função para encontrar o nó mínimo
-    Node* findMin(Node* node) {
-        return node->left ? findMin(node->left) : node;
-    }
-
-    // Inserção
     Node* insertRec(Node* node, T data) {
         if (!node) return new Node(data);
-        if (data.nome < node->data.nome) node->left = insertRec(node->left, data);
+        if (data < node->data) node->left = insertRec(node->left, data);
         else node->right = insertRec(node->right, data);
         updateHeight(node);
         return balance(node);
     }
 
-    // Remoção
     Node* removeRec(Node* node, T data) {
         if (!node) return nullptr;
 
-        // Busca pelo nó
-        if (data.nome < node->data.nome) {
+        if (data < node->data) {
             node->left = removeRec(node->left, data);
-        } else if (data.nome > node->data.nome) {
+        } else if (node->data < data) {
             node->right = removeRec(node->right, data);
         } else {
-            // Nó encontrado: deletar
             if (!node->left || !node->right) {
                 Node* temp = node->left ? node->left : node->right;
                 if (!temp) {
                     temp = node;
                     node = nullptr;
                 } else {
-                    *node = *temp; // Copia conteúdo
+                    *node = *temp;
                 }
                 delete temp;
             } else {
-                // Nó com dois filhos: substituir pelo sucessor in-order
-                Node* temp = findMin(node->right);
+                Node* temp = node->right;
+                while (temp->left) temp = temp->left;
                 node->data = temp->data;
                 node->right = removeRec(node->right, temp->data);
             }
         }
 
-        // Balancear após remoção
         if (!node) return node;
         updateHeight(node);
         return balance(node);
     }
 
-    // Busca com contagem de passos
     bool searchRec(Node* node, const T& alvo, int& passos) {
         if (!node) return false;
-        passos++; // Conta cada passo
-
-        if (node->data.marca == alvo.marca &&
-            node->data.nome == alvo.nome &&
-            node->data.preco == alvo.preco &&
-            node->data.revenda == alvo.revenda &&
-            node->data.ano == alvo.ano) return true;
-
-        if (alvo.nome < node->data.nome) return searchRec(node->left, alvo, passos);
-        else return searchRec(node->right, alvo, passos);
+        passos++;
+        if (node->data == alvo) return true;
+        return (alvo < node->data) ? searchRec(node->left, alvo, passos)
+                                  : searchRec(node->right, alvo, passos);
     }
 
-    // Exibição em ordem
     void printInOrder(Node* node) {
         if (node) {
             printInOrder(node->left);
@@ -138,7 +124,43 @@ public:
 
     void inserir(T data) { root = insertRec(root, data); }
 
-    void remover(T data) { root = removeRec(root, data); }
+    bool remover(T data) {
+        int dummy;
+        if (!buscar(data, dummy)) return false;
+        root = removeRec(root, data);
+        return true;
+    }
+
+    void removerPorCriterio(Node*& node, const Moto& alvo) {
+        if (!node) return;
+
+        // Primeiro processa subárvores
+        removerPorCriterio(node->left, alvo);
+        removerPorCriterio(node->right, alvo);
+
+        // Depois verifica o nó atual
+        if (node->data == alvo) {
+            if (!node->left || !node->right) {
+                Node* temp = node->left ? node->left : node->right;
+                delete node;
+                node = temp;
+            } else {
+                Node* temp = findMin(node->right);
+                node->data = temp->data;
+                removerPorCriterio(node->right, temp->data);
+            }
+        }
+
+        if (node) balance(node);
+    }
+    void removerPorCriterio(const Moto& alvo) {
+        removerPorCriterio(root, alvo);
+        int passosDummy;
+        // Rebalanceia toda a árvore após remoções múltiplas
+        while (buscar(alvo, passosDummy)) {
+            root = removeRec(root, alvo);
+        }
+    }
 
     bool buscar(T data, int& passos) {
         passos = 0;
@@ -157,7 +179,7 @@ public:
     }
 
     ~AVLTree() {
-        // Destrutor opcional (implementar se necessário)
+        // Implementar destrutor se necessário
     }
 };
 

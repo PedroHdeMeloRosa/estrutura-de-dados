@@ -4,48 +4,40 @@
 #include <vector>
 #include <functional>
 #include <bitset>
+#include <sstream>
 #include "DataHandler.h"
 
-#define BLOOM_SIZE 100000 // Tamanho do filtro (ajuste conforme necessidade)
-#define NUM_HASHES 3      // Número de funções hash
+#define BLOOM_SIZE 100000
+#define NUM_HASHES 3
 
 template <typename T>
 class BloomFilter {
 private:
     std::bitset<BLOOM_SIZE> bits;
 
-    // Funções hash (usando combinação de hash de strings)
-    size_t hash1(const T& data) {
-        std::string chave = data.marca + data.nome;
-        return std::hash<std::string>{}(chave) % BLOOM_SIZE;
-    }
-
-    size_t hash2(const T& data) {
-        std::string chave = data.nome + data.marca;
-        return std::hash<std::string>{}(chave) % BLOOM_SIZE;
-    }
-
-    size_t hash3(const T& data) {
-        std::string chave = data.marca + std::to_string(data.ano);
-        return std::hash<std::string>{}(chave) % BLOOM_SIZE;
+    size_t hashCombined(const T& data, int seed) const {
+        std::stringstream ss;
+        ss << data.marca << data.nome << data.preco << data.revenda << data.ano << seed;
+        return std::hash<std::string>{}(ss.str()) % BLOOM_SIZE;
     }
 
 public:
-    void inserir(T data) {
-        bits.set(hash1(data));
-        bits.set(hash2(data));
-        bits.set(hash3(data));
+    void inserir(const T& data) {
+        for (int i = 0; i < NUM_HASHES; ++i) {
+            bits.set(hashCombined(data, i));
+        }
     }
 
-    bool buscar(T data) {
-        return bits.test(hash1(data)) &&
-               bits.test(hash2(data)) &&
-               bits.test(hash3(data));
+    bool buscar(const T& data) const {
+        for (int i = 0; i < NUM_HASHES; ++i) {
+            if (!bits.test(hashCombined(data, i))) return false;
+        }
+        return true;
     }
 
-    // Bloom Filter não suporta remoção!
-    void exibir() {
-        std::cout << "\n⚠️ Bloom Filter não exibe elementos individuais!\n";
+    void exibir() const {
+        std::cout << "\n⚠️ Bloom Filter - Elementos aproximados: "
+                  << bits.count() / NUM_HASHES << "\n";
     }
 };
 

@@ -4,6 +4,7 @@
 #include <iostream>
 #include <iomanip>
 #include <string>
+#include "DataHandler.h"
 
 template <typename T>
 class LinkedList {
@@ -15,20 +16,10 @@ private:
     };
     Node* head;
 
-    // Busca recursiva com contagem de passos
     bool buscarRecursivo(Node* atual, const T& alvo, int& passos) {
         if (!atual) return false;
-        passos++; // Conta cada passo
-
-        if (
-            atual->data.marca == alvo.marca &&
-            atual->data.nome == alvo.nome &&
-            atual->data.preco == alvo.preco &&
-            atual->data.revenda == alvo.revenda &&
-            atual->data.ano == alvo.ano
-        ) return true;
-
-        return buscarRecursivo(atual->next, alvo, passos);
+        passos++;
+        return (atual->data == alvo) || buscarRecursivo(atual->next, alvo, passos);
     }
 
 public:
@@ -40,28 +31,26 @@ public:
         head = novoNode;
     }
 
-    void remover(T data) {
+    bool remover(T data) {
         Node* atual = head;
         Node* anterior = nullptr;
+        bool removido = false;
+
         while (atual) {
-            if (
-                atual->data.marca == data.marca &&
-                atual->data.nome == data.nome &&
-                atual->data.preco == data.preco &&
-                atual->data.revenda == data.revenda &&
-                atual->data.ano == data.ano
-            ) {
+            if (atual->data == data) {
                 if (anterior) anterior->next = atual->next;
                 else head = atual->next;
                 delete atual;
-                return;
+                removido = true;
+                atual = anterior ? anterior->next : head;
+            } else {
+                anterior = atual;
+                atual = atual->next;
             }
-            anterior = atual;
-            atual = atual->next;
         }
+        return removido;
     }
 
-    // Busca com contagem de passos
     bool buscar(T data, int& passos) {
         passos = 0;
         return buscarRecursivo(head, data, passos);
@@ -73,7 +62,7 @@ public:
                   << std::setw(20) << "Modelo"
                   << std::setw(12) << "Preço (R$)"
                   << std::setw(15) << "Revenda (R$)"
-                  << std::setw(6) << "Ano" << "\n"
+                  << std::setw(6) << "Ano\n"
                   << std::string(70, '-') << "\n";
 
         while (atual) {

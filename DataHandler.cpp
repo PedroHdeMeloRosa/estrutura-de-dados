@@ -26,10 +26,10 @@ std::vector<Moto> DataHandler::lerDataset(const std::string& caminho) {
         moto.nome = campo;
 
         std::getline(ss, campo, ',');
-        moto.preco = std::stod(campo);
+        moto.preco = std::stof(campo);
 
         std::getline(ss, campo, ',');
-        moto.revenda = std::stod(campo);
+        moto.revenda = std::stof(campo);
 
         std::getline(ss, campo, ',');
         moto.ano = std::stoi(campo);

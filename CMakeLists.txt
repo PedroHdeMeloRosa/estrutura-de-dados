@@ -10,4 +10,5 @@ add_executable(Estrutura_de_Dados main.cpp
         AVLTree.h
         HashTable.h
         BloomFilter.h
+        RadixTree.h
 )
